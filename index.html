@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEAM</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <span class="nav__logo">SEAM</span>
+    <button class="nav__user">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span>Matt-welch</span>
+      <svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- PROJECTS HEADER -->
+    <div class="section-header">
+      <div>
+        <h1 class="section-header__title">Projects</h1>
+        <p class="section-header__meta">5 active &middot; 1 paused</p>
+      </div>
+      <button class="btn btn--primary">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        New Project
+      </button>
+    </div>
+
+    <!-- ACTIVE GRID -->
+    <div class="card-grid">
+
+      <!-- Card 1 -->
+      <article class="card">
+        <div class="card__header">
+          <h2 class="card__title">SS25 Organic Cotton Hoodie</h2>
+          <span class="badge badge--priority">
+            <svg class="icon icon--xs" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4 4h16v10l-8 4-8-4V4z"/>
+            </svg>
+            Priority
+          </span>
+        </div>
+        <span class="badge badge--status badge--sampling">Sampling</span>
+        <p class="card__desc">Review second sample with updated stitching</p>
+        <div class="card__footer">
+          <span class="badge badge--action">Your Action</span>
+          <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="card">
+        <div class="card__header">
+          <h2 class="card__title">Linen Cargo Pants</h2>
+        </div>
+        <span class="badge badge--status badge--production">Production</span>
+        <p class="card__desc">Confirm colorway for final production run</p>
+        <div class="card__footer">
+          <span class="badge badge--waiting">Waiting on Supplier</span>
+          <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="card">
+        <div class="card__header">
+          <h2 class="card__title">Recycled Denim Jacket</h2>
+          <span class="badge badge--priority">
+            <svg class="icon icon--xs" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4 4h16v10l-8 4-8-4V4z"/>
+            </svg>
+            Priority
+          </span>
+        </div>
+        <span class="badge badge--status badge--review">Review</span>
+        <p class="card__desc">Approve fit sample before bulk</p>
+        <div class="card__footer">
+          <span class="badge badge--action">Your Action</span>
+          <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="card">
+        <div class="card__header">
+          <h2 class="card__title">Merino Wool Sweater</h2>
+        </div>
+        <span class="badge badge--status badge--briefing">Briefing</span>
+        <p class="card__desc">Send tech pack with updated measurements</p>
+        <div class="card__footer">
+          <span class="badge badge--action">Your Action</span>
+          <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <article class="card">
+        <div class="card__header">
+          <h2 class="card__title">Canvas Tote Bag</h2>
+        </div>
+        <span class="badge badge--status badge--shipping">Shipping</span>
+        <p class="card__desc">Track shipment arriving this week</p>
+        <div class="card__footer">
+          <span class="badge badge--waiting">Waiting on Supplier</span>
+          <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- PAUSED SECTION -->
+    <div class="paused-section">
+      <h3 class="paused-section__label">PAUSED</h3>
+      <div class="card-grid card-grid--paused">
+
+        <!-- Paused Card -->
+        <article class="card card--paused">
+          <div class="card__header">
+            <h2 class="card__title card__title--muted">Silk Scarf Collection</h2>
+            <svg class="icon icon--pause" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" rx="1"/>
+              <rect x="14" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </div>
+          <span class="badge badge--status badge--sampling">Sampling</span>
+          <p class="card__desc card__desc--muted">Awaiting revised fabric swatches from supplier</p>
+          <div class="card__footer">
+            <span class="badge badge--waiting">Waiting on Supplier</span>
+            <svg class="icon icon--arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
