@@ -1,0 +1,25 @@
+{
+  "name": "progblack-coursework-2",
+  "version": "1.0.0",
+  "description": "collaborative project for our web development second coursework",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node web.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimonOrmond/ProgBlack-CourseWork-2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SimonOrmond/ProgBlack-CourseWork-2/issues"
+  },
+  "homepage": "https://github.com/SimonOrmond/ProgBlack-CourseWork-2#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
