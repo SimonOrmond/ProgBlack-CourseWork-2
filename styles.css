@@ -22,6 +22,8 @@
   --color-briefing-text: #a16207;
   --color-shipping-bg: #ffe4cc;
   --color-shipping-text: #c25d0a;
+  --color-completed-bg: #e5e5e5;
+  --color-completed-text: #666666;
 
   /* Priority / danger */
   --color-priority-bg: #fee2e2;
@@ -223,6 +225,8 @@ ul { list-style: none; }
 .card:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
 .card--paused { opacity: 0.65; }
 .card--paused:hover { opacity: 0.9; }
+.card--completed { opacity: 0.55; }
+.card--completed:hover { opacity: 0.85; }
 
 .card__header {
   display: flex;
@@ -262,6 +266,7 @@ ul { list-style: none; }
 .badge--review     { background: var(--color-review-bg);     color: var(--color-review-text); }
 .badge--briefing   { background: var(--color-briefing-bg);   color: var(--color-briefing-text); }
 .badge--shipping   { background: var(--color-shipping-bg);   color: var(--color-shipping-text); }
+.badge--completed  { background: var(--color-completed-bg);  color: var(--color-completed-text); }
 .badge--action { background: var(--color-action-bg); color: var(--color-action-text); font-weight: 600; }
 .badge--waiting { background: var(--color-waiting-bg); color: var(--color-waiting-text); border: 1px solid var(--color-waiting-border); }
 
@@ -272,6 +277,14 @@ ul { list-style: none; }
   color: var(--color-text-muted); margin-bottom: 14px; text-transform: uppercase;
 }
 
+/* --- Detail topbar ----------------------------------------- */
+.detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
 /* --- Back link --------------------------------------------- */
 .back-link {
   display: inline-flex;
@@ -279,10 +292,18 @@ ul { list-style: none; }
   gap: 6px;
   font-size: 13px;
   color: var(--color-text-muted);
-  margin-bottom: 28px;
   transition: color 0.15s;
 }
 .back-link:hover { color: var(--color-text); }
+
+/* --- Complete button --------------------------------------- */
+.btn--complete {
+  background: #16a34a;
+  color: #fff;
+  border: none;
+}
+.btn--complete:hover { background: #15803d; }
+.btn--complete:disabled { background: #6b7280; cursor: not-allowed; opacity: 0.7; }
 
 /* --- Detail layout ----------------------------------------- */
 .detail-layout {

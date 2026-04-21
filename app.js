@@ -4,21 +4,19 @@
 
 // --- Data ---------------------------------------------------
 
-let projects = [
-  { id: 1, title: 'SS25 Organic Cotton Hoodie', supplier: 'Sunrise Textiles',  status: 'sampling',   priority: true,  paused: false, actionOwner: 'yours',    desc: 'Review second sample with updated stitching',        todos: [], files: [] },
-  { id: 2, title: 'Linen Cargo Pants',          supplier: 'East Mill Co.',      status: 'production', priority: false, paused: false, actionOwner: 'supplier', desc: 'Confirm colorway for final production run',          todos: [], files: [] },
-  { id: 3, title: 'Recycled Denim Jacket',      supplier: 'Green Wash Ltd.',    status: 'review',     priority: true,  paused: false, actionOwner: 'yours',    desc: 'Approve fit sample before bulk',                     todos: [], files: [] },
-  { id: 4, title: 'Merino Wool Sweater',        supplier: 'Alpine Yarns',       status: 'briefing',   priority: false, paused: false, actionOwner: 'yours',    desc: 'Send tech pack with updated measurements',           todos: [], files: [] },
-  { id: 5, title: 'Canvas Tote Bag',            supplier: 'Flat Pack Goods',    status: 'shipping',   priority: false, paused: false, actionOwner: 'supplier', desc: 'Track shipment arriving this week',                  todos: [], files: [] },
-  { id: 6, title: 'Silk Scarf Collection',      supplier: 'Orient Fabric Co.',  status: 'sampling',   priority: false, paused: true,  actionOwner: 'supplier', desc: 'Awaiting revised fabric swatches from supplier',     todos: [], files: [] },
-];
-
-let nextId = 7;
+let projects = [];
 let currentProjectId = null;
+
+// --- API helpers --------------------------------------------
+
+async function loadProjects() {
+  const res = await fetch('/api/projects');
+  projects = await res.json();
+}
 
 // --- Helpers ------------------------------------------------
 
-const statusLabel = { sampling: 'Sampling', production: 'Production', review: 'Review', briefing: 'Briefing', shipping: 'Shipping' };
+const statusLabel = { sampling: 'Sampling', production: 'Production', review: 'Review', briefing: 'Briefing', shipping: 'Shipping', completed: 'Completed' };
 
 function iconSVG(type) {
   const icons = {
@@ -32,9 +30,12 @@ function iconSVG(type) {
 }
 
 function makeCard(project) {
+  const isCompleted = project.status === 'completed';
+  const isDimmed = project.paused || isCompleted;
+
   const card = document.createElement('article');
-  card.className = 'card' + (project.paused ? ' card--paused' : '');
-  card.dataset.id = project.id;
+  card.className = 'card' + (project.paused ? ' card--paused' : '') + (isCompleted ? ' card--completed' : '');
+  card.dataset.id = project._id;
 
   const actionBadge = project.actionOwner === 'yours'
     ? `<span class="badge badge--action">Your Action</span>`
@@ -46,17 +47,17 @@ function makeCard(project) {
 
   card.innerHTML = `
     <div class="card__header">
-      <h2 class="card__title${project.paused ? ' card__title--muted' : ''}">${project.title}</h2>
+      <h2 class="card__title${isDimmed ? ' card__title--muted' : ''}">${project.title}</h2>
       ${priorityBadge}
     </div>
     <span class="badge badge--status badge--${project.status}">${statusLabel[project.status]}</span>
-    <p class="card__desc${project.paused ? ' card__desc--muted' : ''}">${project.desc}</p>
+    <p class="card__desc${isDimmed ? ' card__desc--muted' : ''}">${project.desc}</p>
     <div class="card__footer">
       ${actionBadge}
       ${iconSVG('arrow')}
     </div>`;
 
-  card.addEventListener('click', () => openDetail(project.id));
+  card.addEventListener('click', () => openDetail(project._id));
   return card;
 }
 
@@ -88,7 +89,7 @@ function showView(name) {
 
 function openDetail(id) {
   currentProjectId = id;
-  const p = projects.find(x => x.id === id);
+  const p = projects.find(x => x._id === id);
   if (!p) return;
 
   // Populate fields
@@ -120,7 +121,7 @@ function openDetail(id) {
 
 function saveCurrentProject() {
   if (!currentProjectId) return;
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   if (!p) return;
   p.title    = document.getElementById('detail-name').value;
   p.supplier = document.getElementById('detail-supplier').value;
@@ -135,7 +136,7 @@ document.getElementById('detail-notes').addEventListener('input', saveCurrentPro
 
 const detailStatus = document.getElementById('detail-status');
 detailStatus.addEventListener('change', () => {
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   if (p) p.status = detailStatus.value;
   detailStatus.dataset.status = detailStatus.value;
 });
@@ -155,14 +156,14 @@ function setToggle(btnId, active, type) {
 }
 
 document.getElementById('detail-priority-btn').addEventListener('click', () => {
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   if (!p) return;
   p.priority = !p.priority;
   setToggle('detail-priority-btn', p.priority, 'priority');
 });
 
 document.getElementById('detail-paused-btn').addEventListener('click', () => {
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   if (!p) return;
   p.paused = !p.paused;
   setToggle('detail-paused-btn', p.paused, 'paused');
@@ -179,7 +180,7 @@ function setSegmented(container, value) {
 document.getElementById('action-owner').addEventListener('click', (e) => {
   const btn = e.target.closest('.segmented__btn');
   if (!btn) return;
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   if (p) p.actionOwner = btn.dataset.value;
   setSegmented(document.getElementById('action-owner'), btn.dataset.value);
 });
@@ -187,7 +188,7 @@ document.getElementById('action-owner').addEventListener('click', (e) => {
 // --- To-do list ---------------------------------------------
 
 function renderTodos() {
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   const list = document.getElementById('todo-list');
   const empty = document.getElementById('todo-empty');
   list.innerHTML = '';
@@ -229,7 +230,7 @@ function confirmTodo() {
   const input = document.getElementById('todo-input');
   const text = input.value.trim();
   if (text) {
-    const p = projects.find(x => x.id === currentProjectId);
+    const p = projects.find(x => x._id === currentProjectId);
     if (p) { p.todos.push({ text, done: false }); renderTodos(); }
   }
   input.value = '';
@@ -251,7 +252,7 @@ document.getElementById('todo-input').addEventListener('keydown', (e) => {
 // --- File attachments ---------------------------------------
 
 function renderFiles() {
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   const list = document.getElementById('file-list');
   list.innerHTML = '';
   if (!p) return;
@@ -272,7 +273,7 @@ function renderFiles() {
 }
 
 document.getElementById('file-input').addEventListener('change', (e) => {
-  const p = projects.find(x => x.id === currentProjectId);
+  const p = projects.find(x => x._id === currentProjectId);
   if (!p) return;
   Array.from(e.target.files).forEach(f => p.files.push({ name: f.name }));
   renderFiles();
@@ -281,18 +282,20 @@ document.getElementById('file-input').addEventListener('change', (e) => {
 
 // --- Back button --------------------------------------------
 
-document.getElementById('back-btn').addEventListener('click', () => {
+document.getElementById('back-btn').addEventListener('click', async () => {
   saveCurrentProject();
+  currentProjectId = null;
+  await loadProjects();
   renderHome();
   showView('home');
-  currentProjectId = null;
 });
 
-document.getElementById('nav-logo').addEventListener('click', () => {
+document.getElementById('nav-logo').addEventListener('click', async () => {
   if (currentProjectId) saveCurrentProject();
+  currentProjectId = null;
+  await loadProjects();
   renderHome();
   showView('home');
-  currentProjectId = null;
 });
 
 // --- New Project modal --------------------------------------
@@ -318,12 +321,11 @@ document.getElementById('modal-overlay').addEventListener('click', (e) => {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
 });
 
-document.getElementById('modal-create-btn').addEventListener('click', () => {
+document.getElementById('modal-create-btn').addEventListener('click', async () => {
   const name = document.getElementById('modal-name').value.trim();
   if (!name) { document.getElementById('modal-name').focus(); return; }
 
   const newProject = {
-    id: nextId++,
     title: name,
     supplier: document.getElementById('modal-supplier').value.trim() || '—',
     status: modalStatus.value,
@@ -334,10 +336,23 @@ document.getElementById('modal-create-btn').addEventListener('click', () => {
     todos: [],
     files: [],
   };
-  projects.push(newProject);
-  closeModal();
-  renderHome();
-  openDetail(newProject.id);
+
+  try {
+    const res = await fetch('/api/projects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newProject),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+
+    await loadProjects();
+    closeModal();
+    renderHome();
+    openDetail(data._id);
+  } catch (err) {
+    alert('Failed to create project: ' + err.message);
+  }
 });
 
 // Close modal with Escape
@@ -364,7 +379,43 @@ document.addEventListener('click', () => {
 
 userDropdown.addEventListener('click', (e) => e.stopPropagation());
 
+// --- Save project -------------------------------------------
+
+document.getElementById('save-btn').addEventListener('click', async () => {
+  saveCurrentProject();
+  const p = projects.find(x => x._id === currentProjectId);
+  if (!p) return;
+
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    const res = await fetch(`/api/projects/${currentProjectId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(p),
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+
+    await loadProjects();
+    openDetail(currentProjectId);
+    btn.textContent = 'Saved!';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
+    }, 1500);
+  } catch (err) {
+    alert('Failed to save: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+  }
+});
+
 // --- Init ---------------------------------------------------
 
-renderHome();
-showView('home');
+loadProjects().then(() => {
+  renderHome();
+  showView('home');
+});

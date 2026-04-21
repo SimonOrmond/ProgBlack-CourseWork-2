@@ -95,13 +95,16 @@
   ====================================================== -->
   <main class="main" id="view-detail" hidden>
 
-    <button class="back-link" id="back-btn">
-      <svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="19" y1="12" x2="5" y2="12"/>
-        <polyline points="12 19 5 12 12 5"/>
-      </svg>
-      Back to Projects
-    </button>
+    <div class="detail-topbar">
+      <button class="back-link" id="back-btn">
+        <svg class="icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back to Projects
+      </button>
+      <button class="btn btn--primary" id="save-btn">Save Changes</button>
+    </div>
 
     <div class="detail-layout">
 
@@ -137,6 +140,7 @@
                   <option value="review">Review</option>
                   <option value="briefing">Briefing</option>
                   <option value="shipping">Shipping</option>
+                  <option value="completed">Completed</option>
                 </select>
                 <svg class="select-chevron icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="6 9 12 15 18 9"/>
@@ -241,6 +245,7 @@
               <option value="production">Production</option>
               <option value="review">Review</option>
               <option value="shipping">Shipping</option>
+              <option value="completed">Completed</option>
             </select>
             <svg class="select-chevron icon icon--sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="6 9 12 15 18 9"/>
