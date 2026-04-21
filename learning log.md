@@ -11,3 +11,9 @@ I researched various cloud storage options for our project and decided to contin
 
 I set up a cluster and downloaded the example node.js application so that I could learn how to implement it in my own code.
 
+27/02/2026:
+
+Using the mongoDB documentation I installed an example repository and used that to learn some of the syntax required to read and write data from the cluster I wanted. 
+
+
+
