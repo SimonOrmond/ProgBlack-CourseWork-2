@@ -413,9 +413,77 @@ document.getElementById('save-btn').addEventListener('click', async () => {
   }
 });
 
+// --- Auth ---------------------------------------------------
+
+function showLoginOverlay() {
+  document.getElementById('login-overlay').hidden = false;
+}
+
+function hideLoginOverlay() {
+  document.getElementById('login-overlay').hidden = true;
+}
+
+async function handleLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorEl  = document.getElementById('login-error');
+  const loginBtn = document.getElementById('login-btn');
+  errorEl.hidden = true;
+  loginBtn.disabled = true;
+  loginBtn.textContent = 'Signing in…';
+
+  try {
+    const res  = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      hideLoginOverlay();
+      await loadProjects();
+      renderHome();
+      showView('home');
+    } else {
+      errorEl.hidden = false;
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-password').focus();
+    }
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.textContent = 'Sign In';
+  }
+}
+
+document.getElementById('login-btn').addEventListener('click', handleLogin);
+document.getElementById('login-password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleLogin();
+});
+document.getElementById('login-username').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('login-password').focus();
+});
+
+document.getElementById('signout-btn').addEventListener('click', async () => {
+  await fetch('/api/logout', { method: 'POST' });
+  userDropdown.hidden = true;
+  showLoginOverlay();
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+});
+
 // --- Init ---------------------------------------------------
 
-loadProjects().then(() => {
-  renderHome();
-  showView('home');
-});
+async function init() {
+  const res  = await fetch('/api/auth');
+  const data = await res.json();
+  if (data.loggedIn) {
+    await loadProjects();
+    renderHome();
+    showView('home');
+  } else {
+    showLoginOverlay();
+    document.getElementById('login-username').focus();
+  }
+}
+
+init();

@@ -1,12 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const session = require('express-session');
 const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const MONGO_URI = process.env.MONGO_URI ||
-  'mongodb+srv://simonormond06:salt1Sugarm!@cluster0.b87474g.mongodb.net/?appName=Cluster0';
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) throw new Error('MONGO_URI is not set in .env');
 
 let db;
 
@@ -18,6 +20,36 @@ async function connectDB() {
 }
 
 app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
+
+function requireAuth(req, res, next) {
+  if (req.session.loggedIn) return next();
+  res.status(401).json({ ok: false, error: 'Not logged in' });
+}
+
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+    req.session.loggedIn = true;
+    res.json({ ok: true });
+  } else {
+    res.status(401).json({ ok: false, error: 'Invalid credentials' });
+  }
+});
+
+app.post('/api/logout', (req, res) => {
+  req.session.destroy();
+  res.json({ ok: true });
+});
+
+app.get('/api/auth', (req, res) => {
+  res.json({ loggedIn: !!req.session.loggedIn });
+});
 
 app.get('/api/projects', async (req, res) => {
   try {
@@ -28,7 +60,7 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
-app.patch('/api/projects/:id', async (req, res) => {
+app.patch('/api/projects/:id', requireAuth, async (req, res) => {
   try {
     const { _id, ...fields } = req.body;
     await db.updateOne(
@@ -41,7 +73,7 @@ app.patch('/api/projects/:id', async (req, res) => {
   }
 });
 
-app.post('/api/projects', async (req, res) => {
+app.post('/api/projects', requireAuth, async (req, res) => {
   try {
     const result = await db.insertOne(req.body);
     res.json({ ok: true, _id: result.insertedId.toString() });
@@ -49,7 +81,6 @@ app.post('/api/projects', async (req, res) => {
     res.status(500).json({ ok: false, error: err.message });
   }
 });
-
 
 app.use(express.static(path.join(__dirname)));
 
