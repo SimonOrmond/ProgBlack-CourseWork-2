@@ -16,6 +16,10 @@ async function connectDB() {
   const client = new MongoClient(MONGO_URI);
   await client.connect();
   db = client.db('seam').collection('projects');
+  await db.createIndex(
+    { title: 'text', supplier: 'text', notes: 'text' },
+    { name: 'projects_text_search' }
+  );
   console.log('Connected to MongoDB');
 }
 
@@ -49,6 +53,25 @@ app.post('/api/logout', (req, res) => {
 
 app.get('/api/auth', (req, res) => {
   res.json({ loggedIn: !!req.session.loggedIn });
+});
+
+app.get('/api/projects/search', async (req, res) => {
+  const q = (req.query.q || '').trim();
+  if (!q) return res.json([]);
+  try {
+    const regex = { $regex: q, $options: 'i' };
+    const results = await db.find({
+      $or: [
+        { title: regex },
+        { supplier: regex },
+        { notes: regex },
+        { status: regex },
+      ]
+    }).toArray();
+    res.json(results.map(p => ({ ...p, _id: p._id.toString() })));
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
 });
 
 app.get('/api/projects', async (req, res) => {

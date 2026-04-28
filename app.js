@@ -285,6 +285,7 @@ document.getElementById('file-input').addEventListener('change', (e) => {
 document.getElementById('back-btn').addEventListener('click', async () => {
   saveCurrentProject();
   currentProjectId = null;
+  searchInput.value = '';
   await loadProjects();
   renderHome();
   showView('home');
@@ -293,6 +294,7 @@ document.getElementById('back-btn').addEventListener('click', async () => {
 document.getElementById('nav-logo').addEventListener('click', async () => {
   if (currentProjectId) saveCurrentProject();
   currentProjectId = null;
+  searchInput.value = '';
   await loadProjects();
   renderHome();
   showView('home');
@@ -412,6 +414,39 @@ document.getElementById('save-btn').addEventListener('click', async () => {
     btn.textContent = 'Save Changes';
   }
 });
+
+// --- Search -------------------------------------------------
+
+const searchInput = document.getElementById('search-input');
+let searchTimeout = null;
+
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(async () => {
+    const q = searchInput.value.trim();
+    if (!q) {
+      await loadProjects();
+      renderHome();
+      return;
+    }
+    try {
+      const res = await fetch(`/api/projects/search?q=${encodeURIComponent(q)}`);
+      const results = await res.json();
+      renderSearchResults(results, q);
+    } catch (err) {
+      console.error('Search failed:', err);
+    }
+  }, 300);
+});
+
+function renderSearchResults(results, query) {
+  document.getElementById('project-count').textContent =
+    `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`;
+  const activeGrid = document.getElementById('active-grid');
+  activeGrid.innerHTML = '';
+  results.forEach(p => activeGrid.appendChild(makeCard(p)));
+  document.getElementById('paused-section').hidden = true;
+}
 
 // --- Auth ---------------------------------------------------
 
