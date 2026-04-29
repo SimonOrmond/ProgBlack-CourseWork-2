@@ -216,4 +216,4 @@ For further reading on MongoDB regex queries:
 - MongoDB's `_id` is an `ObjectId` type — always wrap string IDs in `new ObjectId()` when querying
 - IP allowlist and session auth protect different layers: Atlas-level connections vs. app-level routes
 - `$text` search needs a text index and works on whole words; `$regex` needs no index and works on substrings — choose based on your dataset size and use case
-- Always stop your development server with `Ctrl+C` before closing the terminal to avoid stale processes holding your port
+
