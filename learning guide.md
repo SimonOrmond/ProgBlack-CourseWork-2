@@ -2,7 +2,7 @@
 
 I chose to learn how to use and implement MongoDB in a similar context to how I used json files in the previous programming project. I wanted to learn it specifically because I had heard about it before and was curious how real websites stored data and after researching I found out that mongoDB was used a lot in industry. It is also used in popular tech stacks such as MEAN (MongoDB, Express.js, Angular, Node.js) and MERN (MongoDB, Express.js, React, Node.js). 
 
-This guide walks through how to integrate MongoDB Atlas into a Node.js and Express application, covering setup, CRUD operations, security, authentication, and search. It follows the same learning path I took when developing a cloths designer and supplier communication platform. This project suited mongoDB well because the app was all about storing, updating and searching data in a secure way.
+This guide walks through how to integrate MongoDB Atlas into a Node.js and Express application, covering setup, CRUD operations, security, authentication, and search. It follows the same learning path I took when developing a clothes designer and supplier communication platform. This project suited mongoDB well because the app was all about storing, updating and searching data in a secure way.
 
 
 ## 1. Setting Up MongoDB Atlas
