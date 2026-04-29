@@ -1,10 +1,6 @@
-Structure:
-1. Date
-2. What I learnt
-3. What I built/did to apply the skill
-4. Problems I encountered
+# My Learning Log
 
-24/02/2026:
+## 24/02/2026:
 
 I researched various cloud storage options for our project and decided to continue forward with mongoDB because it was free and I saw that it was easy to use and I had heard of it before so I was confident in its reliability.
 
@@ -12,11 +8,11 @@ I set up a cluster and downloaded the example node.js application so that I coul
 
 A resource I found useful was the installation tutorial: https://www.mongodb.com/resources/languages/mongodb-and-npm-tutorial
 
-27/02/2026:
+## 27/02/2026:
 
 Using the mongoDB documentation I installed an example repository and used that to learn some of the syntax required to read and write data from the cluster I wanted including all of the CRUD operations that I might need depending on my requirements.
 
-21/04/2026:
+## 21/04/2026:
 
 I began to apply the the knowledge I had been learning to the collaborative project I am working on.
 
@@ -26,7 +22,7 @@ I built Express API endpoints to handle reading and writing to the cluster: a GE
 
 A problem I encountered was stale server instances accumulating in the background during development, which meant old processes without the updated routes were still holding port 3000 and causing 404 errors on the new endpoints. To fix this I just needed to make sure I remember to stop the server before closing the console so that my server requests weren't being picked up by a stale server
 
-27/04/2026:
+## 27/04/2026:
 
 I realised after looking at some more example applications using mongoDB that I had my MongoDB collection access string in my web.js file so I had to use npm's dotenv to store the variable and add it to a gitignore so that not just anyone could access the data.
 
@@ -36,7 +32,7 @@ This meant learning about express-sessions and learning about cookies. I learnt 
 
 For the purposes of this project I made the session last until the browser is closed, and made the login credentials unchangeable in the .env file for security. I did this by not assigning a maxAge to the cookie.
 
-28/04/2026:
+## 28/04/2026:
 
 I wanted to find a way to allow the user to search all of the current projects by relevant fields like the name, supplier and the project notes. After some google searching I found that mongoDB has a feature that does this through it's $text queries. It also allows me to sort the results of the search by relevance as when it does a search it can return a $meta: textscore from which I can filter and then sort the results accordingly. 
  

@@ -1,4 +1,4 @@
-# MongoDB with Node.js and Express — A Practical Learning Guide
+# MongoDB with Node.js and Express — A Learning Guide
 
 I chose to learn how to use and implement MongoDB in a similar context to how I used json files in the previous programming project. I wanted to learn it specifically because I had heard about it before and was curious how real websites stored data and after researching I found out that mongoDB was used a lot in industry. It is also used in popular tech stacks such as MEAN (MongoDB, Express.js, Angular, Node.js) and MERN (MongoDB, Express.js, React, Node.js). 
 
@@ -10,7 +10,7 @@ This guide walks through how to integrate MongoDB Atlas into a Node.js and Expre
 MongoDB Atlas is the cloud-hosted version of MongoDB. It offers a free lower-storage plan and requires no local installation.
 
 **Set up Steps:**
-1. Create an account at [mongodb.com](https://www.mongodb.com) and set up a free cluster (M0 tier).
+1. Create an account at https://www.mongodb.com and set up a free cluster (M0 tier).
 2. Under **Database Access**, create a database user with a username and password. This is the credential your app will use to connect — it is separate from your Atlas account login.
 3. Under **Network Access**, add your IP address to the allowlist. During development you can use `0.0.0.0/0` to allow connections from any IP, which is useful if you are working from multiple locations.
 4. From the cluster dashboard, click **Connect** and select the **Node.js driver** option to get your connection string. You will need this to access the collection from your code.
@@ -112,6 +112,8 @@ Note the difference in what these two controls protect: the IP allowlist control
 
 ## 5. Session-Based Authentication with Express
 
+This is separate to the MongoDB learning but I'm including it because I believe it's relevant and useful to a lot of mongoDB use cases.
+
 To restrict write operations to logged-in users, `express-session` can be used to manage login state via cookies.
 
 ```
@@ -123,7 +125,7 @@ Add to your `.env`:
 ```
 ADMIN_USER=admin
 ADMIN_PASS=yourpassword
-SESSION_SECRET=a-long-random-string
+SESSION_SECRET=alongrandomstring
 ```
 
 The `SESSION_SECRET` is used to cryptographically sign the session cookie. If someone tampers with the cookie value in their browser, the signature will not match and the server will reject it. It must remain constant for the duration of a session.
@@ -139,6 +141,11 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false }
 }));
+```
+
+The documentation for the express session middleware can be found here (https://expressjs.com/en/resources/middleware/session.html). There are many different options for the above code and they are all explains in those documentation.
+
+```javascript
 
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
@@ -169,7 +176,7 @@ Not setting a `maxAge` on the cookie means it is a session cookie — the browse
 
 ## 6. Search with $regex
 
-MongoDB provides two main approaches to text search. The first, `$text`, uses a text index and word stemming, which is suited to natural language on large datasets but does not support partial word matching. The second, `$regex`, matches any substring within a field value and is better suited to small collections where users expect partial results.
+MongoDB provides two main approaches to text search. The first, `$text`, uses a text index and word stemming, which is suited to natural language on large datasets but does not support partial word matching. '$text' also returns a textscore which results can be sorted by based on the results relevance to the search. The second, `$regex`, matches any substring within a field value and is better suited to small collections where users expect partial results.
 
 To set up `$regex` search across multiple fields:
 
@@ -203,7 +210,7 @@ For further reading on MongoDB regex queries:
 
 ---
 
-## Key Takeaways
+## Important Reminders
 
 - Always store credentials in `.env` and add it to `.gitignore` before writing any connection code
 - MongoDB's `_id` is an `ObjectId` type — always wrap string IDs in `new ObjectId()` when querying
